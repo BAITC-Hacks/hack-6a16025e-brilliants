@@ -22,8 +22,8 @@
 Нужен **Node.js 20+** и бесплатный API-ключ Groq: https://console.groq.com/keys
 
 ```bash
-git clone https://github.com/Kair97/lectureai.git
-cd lectureai
+git clone https://github.com/BAITC-Hacks/hack-6a16025e-brilliants.git
+cd hack-6a16025e-brilliants
 npm install
 npm run dev
 ```
