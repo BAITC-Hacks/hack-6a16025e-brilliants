@@ -4,3 +4,6 @@ dist
 .env.local
 *.log
 *.pdf
+
+# PDF build helper
+docs/build_pdf/__pycache__
