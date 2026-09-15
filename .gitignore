@@ -7,3 +7,4 @@ dist
 
 # PDF build helper
 docs/build_pdf/__pycache__
+!docs/LectureAI_Documentation.pdf
