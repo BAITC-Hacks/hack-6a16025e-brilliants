@@ -20,8 +20,8 @@
 Нужен **Node.js 20+** и бесплатный API-ключ Groq: https://console.groq.com/keys
 
 ```bash
-git clone <URL этого репозитория>
-cd HACKALEMAI_rep
+git clone https://github.com/Kair97/lectureai.git
+cd lectureai
 npm install
 npm run dev
 ```
