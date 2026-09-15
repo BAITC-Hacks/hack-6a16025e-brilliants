@@ -107,12 +107,13 @@
 }
 
 .flashcard-inner {
+  -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   transition: transform 560ms cubic-bezier(0.2, 0.75, 0.2, 1);
 }
 
 .flashcard-inner.is-flipped { transform: rotateY(180deg); }
-.flashcard-face { backface-visibility: hidden; }
+.flashcard-face { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
 .flashcard-back { transform: rotateY(180deg); }
 
 @keyframes fade-in {

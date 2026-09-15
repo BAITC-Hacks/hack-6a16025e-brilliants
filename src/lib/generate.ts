@@ -46,7 +46,7 @@ export function validateLecture(raw: string): void {
   if (text.length < MIN_LENGTH) {
     throw new LectureError(
       "Недостаточно текста",
-      `Текст слишком короткий (${text.length} из минимум ${MIN_LENGTH} символов). Пожалуйста, вставьте полный текст лекции.`
+      `Текст слишком короткий, введите лекцию (сейчас ${text.length} из минимум ${MIN_LENGTH} символов).`
     );
   }
   if (text.length > MAX_LENGTH) {
@@ -227,6 +227,9 @@ function toUserError(error: unknown): LectureError {
     if (error.status === 413 || /context_length|too large|reduce the length/i.test(error.body)) {
       return new LectureError("Слишком длинный текст", "Лекция не помещается в запрос. Сократите текст или разделите его на части.");
     }
+    if (error.status === 502) {
+      return new LectureError("Ошибка генерации", "Ошибка генерации, попробуйте еще раз.");
+    }
     return new LectureError("Ошибка ИИ-сервиса", `Не удалось получить материалы (код ${error.status}). Попробуйте ещё раз.`);
   }
   return new LectureError("Нет соединения", "Не удалось связаться с Groq. Проверьте интернет и попробуйте снова.");
@@ -248,7 +251,13 @@ export async function generateMaterials(lecture: string, apiKey: string): Promis
     const model = attempts[i];
     try {
       const raw = await callGroq(model, key, text, signal);
-      return normalize(raw, text, model);
+      try {
+        return normalize(raw, text, model);
+      } catch (shapeError) {
+        // Malformed structure (e.g. a field of the wrong type) counts as a bad generation, not a crash.
+        if (shapeError instanceof LectureError || shapeError instanceof HttpError) throw shapeError;
+        throw new HttpError(502, "malformed materials", null);
+      }
     } catch (error) {
       lastError = error;
       if (error instanceof LectureError) throw error;

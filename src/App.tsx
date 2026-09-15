@@ -21,6 +21,7 @@ import demoLecture from "../demo/lecture_photosynthesis.txt?raw";
 import {
   generateMaterials,
   LectureError,
+  validateLecture,
   type Flashcard,
   type Materials,
   type QuizQuestion,
@@ -73,6 +74,13 @@ export default function LectureAI() {
 
   const generate = async () => {
     if (isLoading) return;
+    // Validate synchronously: invalid text never triggers a request or the loading state.
+    try {
+      validateLecture(lecture);
+    } catch (err) {
+      if (err instanceof LectureError) setError({ title: err.title, message: err.message });
+      return;
+    }
     const id = ++requestId.current;
     setError(null);
     setIsLoading(true);
